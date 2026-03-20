@@ -1,0 +1,34 @@
+modules = ["python-3.11"]
+[agent]
+expertMode = true
+integrations = ["python_openai_ai_integrations:1.0.0"]
+
+[nix]
+channel = "stable-25_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "pip uninstall telegram -y --quiet 2>/dev/null; python bot.py"
+
+[workflows.workflow.metadata]
+outputType = "console"
+
+[deployment]
+deploymentTarget = "cloudrun"
