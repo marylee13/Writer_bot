@@ -23,13 +23,15 @@ ADMIN_USER_ID = int(os.environ.get("ADMIN_USER_ID", "0"))
 DATA_FILE = "writers.json"
 STATS_FILE = "premium_stats.json"
 
-# ====== OpenAI через Replit AI Integrations (не требует своего ключа) ======
+# ====== OpenAI (optional — falls back to hardcoded responses if key is absent) ======
 # the newest OpenAI model is "gpt-5" which was released August 7, 2025.
 # do not change this unless explicitly requested by the user
-openai_client = OpenAI(
-    api_key=os.environ.get("AI_INTEGRATIONS_OPENAI_API_KEY"),
-    base_url=os.environ.get("AI_INTEGRATIONS_OPENAI_BASE_URL")
-)
+_openai_api_key = os.environ.get("OPENAI_API_KEY")
+if _openai_api_key:
+    openai_client = OpenAI(api_key=_openai_api_key)
+else:
+    openai_client = None
+    logging.warning("OPENAI_API_KEY is not set — AI features will use hardcoded fallback responses.")
 
 # ====== ПОДПИСКА ======
 PREMIUM_PRICE_RUB = 250
@@ -311,6 +313,8 @@ def premium_badge(user: dict) -> str:
 
 # ====== AI генерация ======
 def _generate_ideas_sync(genre_key: str, count: int = 1):
+    if openai_client is None:
+        raise RuntimeError("OpenAI client is not configured")
     genre_name = GENRES.get(genre_key, "")
     prompt = (
         f"Ты — опытный романист, который любит делиться идеями с друзьями-писателями. "
@@ -342,6 +346,8 @@ async def generate_ideas(genre_key: str = "other", count: int = 1):
     return "\n".join(f"{i+1}. {idea}" for i, idea in enumerate(ideas))
 
 def _generate_quote_sync(genre_key: str, words_today: int, streak: int):
+    if openai_client is None:
+        raise RuntimeError("OpenAI client is not configured")
     genre_name = GENRES.get(genre_key, "")
     response = openai_client.chat.completions.create(
         model="gpt-5",
@@ -365,6 +371,8 @@ async def generate_quote(genre_key: str, words_today: int, streak: int):
     return FALLBACK_QUOTES.get(genre_key, FALLBACK_QUOTES["other"])
 
 def _generate_tip_sync(genre_key: str):
+    if openai_client is None:
+        raise RuntimeError("OpenAI client is not configured")
     genre_name = GENRES.get(genre_key, "")
     response = openai_client.chat.completions.create(
         model="gpt-5",
@@ -396,6 +404,8 @@ async def generate_tip(genre_key: str):
     return FALLBACK_TIPS.get(genre_key, FALLBACK_TIPS["other"])
 
 def _analyze_text_sync(genre_key: str, text: str):
+    if openai_client is None:
+        raise RuntimeError("OpenAI client is not configured")
     genre_name = GENRES.get(genre_key, "")
     response = openai_client.chat.completions.create(
         model="gpt-5",
@@ -418,6 +428,8 @@ async def analyze_text(genre_key: str, text: str):
     return "Не удалось выполнить анализ. Попробуй позже."
 
 def _continue_text_sync(genre_key: str, name: str, text: str):
+    if openai_client is None:
+        raise RuntimeError("OpenAI client is not configured")
     genre_name = GENRES.get(genre_key, "")
     response = openai_client.chat.completions.create(
         model="gpt-5",
@@ -442,6 +454,8 @@ async def continue_text(genre_key: str, name: str, text: str):
     return "Не удалось написать продолжение. Попробуй позже."
 
 def _generate_character_sync(genre_key: str):
+    if openai_client is None:
+        raise RuntimeError("OpenAI client is not configured")
     genre_name = GENRES.get(genre_key, "")
     response = openai_client.chat.completions.create(
         model="gpt-5",
@@ -473,6 +487,8 @@ async def generate_character(genre_key: str):
     return "Не удалось создать персонажа. Попробуй позже."
 
 def _weekly_report_sync(name: str, genre_key: str, total_words: int, streak: int, words_this_week: int):
+    if openai_client is None:
+        raise RuntimeError("OpenAI client is not configured")
     genre_name = GENRES.get(genre_key, "")
     response = openai_client.chat.completions.create(
         model="gpt-5",
@@ -2103,6 +2119,8 @@ async def weekly_report_job(context: ContextTypes.DEFAULT_TYPE):
 
 # ====== УТРЕННИЕ И ВЕЧЕРНИЕ СОВЕТЫ ======
 def _motivation_tip_sync(genre_key: str, period: str):
+    if openai_client is None:
+        raise RuntimeError("OpenAI client is not configured")
     genre_name = GENRES.get(genre_key, "")
     if period == "morning":
         prompt = (
