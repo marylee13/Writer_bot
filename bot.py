@@ -26,7 +26,7 @@ STATS_FILE = "premium_stats.json"
 # ====== OpenAI (optional — falls back to hardcoded responses if key is absent) ======
 # the newest OpenAI model is "gpt-5" which was released August 7, 2025.
 # do not change this unless explicitly requested by the user
-_openai_api_key = import os
+import os
 TOKEN = os.getenv "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"
 if _openai_api_key:
     openai_client = os.getenv "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"
