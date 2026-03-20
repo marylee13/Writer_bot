@@ -15,8 +15,8 @@ from telegram.ext import (
     CallbackQueryHandler, MessageHandler, PreCheckoutQueryHandler,
     filters, JobQueue
 )
-
-TOKEN = "8322794271:AAHK0l2jgi8JMuzIBfsOMEvvA43Ek18X6ow"
+import os
+TOKEN = os.getenv("8322794271:AAHK0l2jgi8JMuzIBfsOMEvvA43Ek18X6ow")
 PAYMENT_PROVIDER_TOKEN = "390540012:LIVE:92025"
 ADMIN_USER_ID = "636261142"
 
