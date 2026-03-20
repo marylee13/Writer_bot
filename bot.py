@@ -26,12 +26,10 @@ STATS_FILE = "premium_stats.json"
 # ====== OpenAI (optional — falls back to hardcoded responses if key is absent) ======
 # the newest OpenAI model is "gpt-5" which was released August 7, 2025.
 # do not change this unless explicitly requested by the user
-_openai_api_key = os.environ.get("OPENAI_API_KEY")
+_openai_api_key = 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
 if _openai_api_key:
-    openai_client = OpenAI(api_key=_openai_api_key)
+    openai_client = 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
 else:
-    openai_client = None
-    logging.warning("OPENAI_API_KEY is not set — AI features will use hardcoded fallback responses.")
 
 # ====== ПОДПИСКА ======
 PREMIUM_PRICE_RUB = 250
