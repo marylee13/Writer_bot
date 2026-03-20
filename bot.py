@@ -16,9 +16,9 @@ from telegram.ext import (
     filters, JobQueue
 )
 
-TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
-PAYMENT_PROVIDER_TOKEN = os.environ.get("PAYMENT_PROVIDER_TOKEN", "")
-ADMIN_USER_ID = int(os.environ.get("ADMIN_USER_ID", "0"))
+TOKEN = 8322794271:AAHK0l2jgi8JMuzIBfsOMEvvA43Ek18X6ow
+PAYMENT_PROVIDER_TOKEN = 390540012:LIVE:92025 2026-03-16 08:44
+ADMIN_USER_ID = 636261142
 
 DATA_FILE = "writers.json"
 STATS_FILE = "premium_stats.json"
